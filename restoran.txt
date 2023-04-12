@@ -1,0 +1,19 @@
+nama makanan = ayam goreng
+jumlah makanan = 20
+harga = 20000
+
+nama makanan = ayam nila
+jumlah makanan = 20
+harga = 20000
+
+nama makanan = ayam
+jumlah makanan = 20
+harga = 20000
+
+nama makanan = ayam
+jumlah makanan = 20
+harga = 20000
+
+nama makanan = ayam
+jumlah makanan = 20
+harga = 20000
