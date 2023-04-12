@@ -149,7 +149,7 @@ int menu()
         switch (ni)
         {
         case 1:
-            dataBarang();
+
 
         case 3:
             exit(1);
@@ -206,6 +206,18 @@ int dataBarang()
         scanf(" %i", &pilih);
         switch (pilih)
         {
+        case 1:
+            tambahData();
+            break;
+        case 2:
+            tampilData();
+            break;
+        case 3:
+            editData();
+            break;
+        case 4:
+            hapusData();
+            break;
         case 5:
             menu();
             break;
@@ -220,3 +232,74 @@ int dataBarang()
     return 0;
 }
 
+void tambahData()
+{
+    system ("cls");
+    char nama_br[50], stok_br[50];
+    int pil, kode;
+    float harga;
+    current = (struct barang*)malloc (sizeof(struct barang));
+    gotoxy(52, 9);
+    printf ("kode barang    :");
+    scanf("%i", &kode);
+    gotoxy(51, 10);
+    printf ("nama barang    :");
+    fflush(stdin);
+    gets(nama_br);
+    gotoxy(51, 11);
+    printf ("stok barang    :");
+    fflush(stdin);
+    gets(stok_br);
+    gotoxy(51, 12);
+    printf ("harga barang   :");
+    scanf("%f", &harga);
+    gotoxy(51, 13);
+    printf ("\n\n");
+    strcpy (current->nama_br, nama_br);
+    strcpy (current->stok_br, stok_br);
+    current->pil=pil;
+    current->kode=kode;
+    current->harga=harga;
+
+    if (head == NULL)
+    {
+        head = tail = current;
+    }
+    else
+    {
+        tail->next = current;
+        tail = current;
+    }
+    tail->next = NULL;
+    printf("\n data berhasil di simpan");
+}
+
+void tampilData()
+{
+    system ("cls");
+    if(head == NULL)
+    {
+        printf("tidak ada data \n");
+    }
+    else
+    {
+        current = head;
+        int i =1;
+        while(current!=NULL)
+        {
+            gotoxy(51, 12);
+            printf("data ke - %i\n", i);
+            gotoxy(51, 13);
+            printf("kode barang     : %i\n", current->kode);
+            gotoxy(51, 14);
+            printf("nama barang     : %s\n", current->nama_br);
+            gotoxy(51, 15);
+            printf("stok barang     : %s\n", current->stok_br);
+            gotoxy(52, 16);
+            printf("harga barang    : %.2f\n", current->harga);
+            current = current->next;
+            printf("\n");
+            i++;
+        }
+    }
+}
