@@ -140,7 +140,7 @@ int menu()
         gotoxy(51, 11);
         printf ("1. data makanan \n");
         gotoxy(51, 12);
-        printf ("2. buat file data \n");
+        printf ("2. riwayat transaksi \n");
         gotoxy(51, 13);
         printf ("3. keluar \n");
         gotoxy(51, 14);
@@ -151,9 +151,14 @@ int menu()
         switch (ni)
         {
         case 1:
-         dataBarang();
+        dataBarang();
+        break;
+
         case 2:
-            addData();
+            system("cls");
+            gotoxy(52,11);
+            printf("belum ada transaksi...");
+            break;
 
         case 3:
             exit(1);
@@ -171,9 +176,9 @@ int menu()
 
 struct barang
 {
-    char nama_barang[30];
-    int jumlah_barang;
-    float harga_barang;
+    char nama_br[30], stok_br[30];
+    int pil, kode;
+    float harga;
     struct barang *next;
 
 }*head, *tail, *current;
@@ -236,116 +241,151 @@ int dataBarang()
     return 0;
 }
 
-
 void tambahData()
 {
-     system("cls");
-     FILE *file;
-   char nama_barang[50];
-   float harga_barang;
-   int jumlah_barang;
+    system ("cls");
+    char nama_br[50], stok_br[50];
+    int pil, kode;
+    float harga;
+    current = (struct barang*)malloc (sizeof(struct barang));
+    gotoxy(52, 9);
+    printf ("kode barang    :");
+    scanf("%i", &kode);
+    gotoxy(51, 10);
+    printf ("nama barang    :");
+    fflush(stdin);
+    gets(nama_br);
+    gotoxy(51, 11);
+    printf ("stok barang    :");
+    fflush(stdin);
+    gets(stok_br);
+    gotoxy(51, 12);
+    printf ("harga barang   :");
+    scanf("%f", &harga);
+    gotoxy(51, 13);
+    printf ("\n\n");
+    strcpy (current->nama_br, nama_br);
+    strcpy (current->stok_br, stok_br);
+    current->pil=pil;
+    current->kode=kode;
+    current->harga=harga;
 
-   // membuka file "daftar_barang.txt" dengan mode "a"
-   file = fopen("restoran.txt", "a");
-
-   // meminta input daftar barang dari pengguna
-   printf("Masukkan nama barang: ");
-   scanf("%s", nama_barang);
-   printf("Masukkan jumlah barang: ");
-   scanf("%d", &jumlah_barang);
-   printf("Masukkan harga barang: ");
-   scanf("%f", &harga_barang);
-
-   // memasukkan daftar barang ke dalam file
-   fprintf(file, "%s\t%d\n", nama_barang, jumlah_barang,harga_barang);
-
-   // menutup file
-   fclose(file);
+    if (head == NULL)
+    {
+        head = tail = current;
+    }
+    else
+    {
+        tail->next = current;
+        tail = current;
+    }
+    tail->next = NULL;
+    printf("\n data berhasil di simpan");
 }
 
 void tampilData()
 {
-    system("cls");
-   FILE *file;
-   char data[50];
-
-   // membuka file "data.txt" dengan mode "r"
-   file = fopen("restoran.txt", "r");
-
-   // membaca data dari file dan menampilkannya di layar
-   fscanf(file, "%[^\n]", data);
-   printf("Data yang disimpan: %s", data);
-   printf("nama makanan: %s", current->nama_barang);
-   printf("jumlah makanan: %s", current->jumlah_barang);
-   printf("harga makanan: %s", current->harga_barang);
-
-
-
-   // menutup file
-   fclose(file);
-   getch;
-}
-
-void editData()
-{
     system ("cls");
-    FILE *file;
-   char nama_barang[50];
-   int jumlah_barang, line_count = 0;
-   char line[MAX_LINE_LENGTH], search_term[50];
-   char *ptr;
-
-   // membuka file "daftar_barang.txt" dengan mode "r+"
-   file = fopen("restoran.txt", "r+");
-
-   // meminta input nama barang yang ingin diedit dari pengguna
-   printf("Masukkan nama barang yang ingin diedit: ");
-   scanf("%s", search_term);
-
-   // mencari nama barang yang ingin diedit dalam file
-   while (fgets(line, MAX_LINE_LENGTH, file)) {
-      ptr = strstr(line, search_term);
-      if (ptr) {
-         // nama barang ditemukan dalam file
-         line_count++;
-         printf("\nData sebelum diedit: %s", line);
-
-         // meminta input data baru dari pengguna
-         printf("Masukkan nama barang baru: ");
-         scanf("%s", nama_barang);
-         printf("Masukkan jumlah barang baru: ");
-         scanf("%d", &jumlah_barang);
-
-         // mengubah data pada file dengan data baru
-         fseek(file, -(strlen(line)), SEEK_CUR);
-         fprintf(file, "%s\t%d\n", nama_barang, jumlah_barang);
-         printf("Data berhasil diedit.\n");
-      }
-   }
-
-   if (line_count == 0) {
-      printf("Data tidak ditemukan.\n");
-   }
-
-   // menutup file
-   fclose(file);
+    if(head == NULL)
+    {
+        printf("tidak ada data \n");
+    }
+    else
+    {
+        current = head;
+        int i =1;
+        while(current!=NULL)
+        {
+            printf("data ke - %i\n", i);
+            printf("kode barang     : %i\n", current->kode);
+            printf("nama barang     : %s\n", current->nama_br);
+            printf("stok barang     : %s\n", current->stok_br);
+            printf("harga barang    : %.2f\n", current->harga);
+            current = current->next;
+            printf("\n");
+            i++;
+        }
+    }
 }
 
-void hapusData()
-{
+void editData(){
     system ("cls");
+    char nama_br[50], stok_br[50];
+    int pil, kode;
+    float harga;
+    if(head==NULL){
+        printf("tidak ada data: \n");
+    }else{
+        current = head;
+        printf("inputkan kode barang yang akan di edit: ");scanf("%i", &kode);
+        while (current !=NULL) {
+            if (current->kode==kode){
+                printf("data ditemukan: \n");
+                printf("kode barang     : %i\n", current->kode);
+                printf("nama barang     : %s\n", current->nama_br);
+                printf("stok barang     : %s\n", current->stok_br);
+                printf("harga barang    : %.2f\n", current->harga);
 
+                printf("\n\nMasukan data baru\n");
+                printf ("nama barang    :"); fflush(stdin); gets(nama_br);
+                printf ("stok barang    :"); fflush(stdin); gets(stok_br);
+                printf ("harga barang   :"); scanf("%f", &harga);
+                printf ("\n\n");
+                strcpy (current->nama_br, nama_br);
+                strcpy (current->stok_br, stok_br);
+                current->pil=pil;
+                current->kode=kode;
+                current->harga=harga;
+
+                printf("\nData berhasil diedit");
+                break;
+            }else if(current == NULL || current->next==NULL){
+                printf("\ndata tidak ada");
+            }
+            current = current->next;
+
+        }
+    }
 }
 
-FILE*fp;
-int buffer[200];
-char ch,fileName[100]="tes.txt";
-void addData(){
-    printf("masukan file baru...");
-    scanf("%s",&fileName);
-    strcat(fileName,".txt");
-    fp=fopen(fileName,"w");
-    fclose(fp);
-    printf("file udah berhasil dibuat!");
-    getch;
+void hapusData(){
+    system ("cls");
+    char nama_br[50], stok_br[50];
+    int pil, kode;
+    float harga;
+
+    if(head == NULL){
+        printf("tidak ada data!\n");
+    }else{
+        struct barang *temp = head;
+        current = head;
+
+        printf("masukan kode barang yang akan di hapus: "); scanf("%i",&kode);
+        int posisi = 0;
+        while (current != NULL){
+            if (current ->kode==kode){
+                break;
+            }
+            posisi++;
+            current = current->next;
+        }
+        if (posisi == 0){
+            head = temp->next;
+            free(temp);
+            printf("\nData berhasil di hapus");
+        }else{
+
+            for(int i=0; temp!=NULL && i<posisi-1; i++){
+                temp = temp->next;
+            }
+            if (temp == NULL || temp->next == NULL){
+                printf("\nData tidak  ada");
+            }else{
+                struct barang *next = temp->next;
+                free(temp->next);
+                printf("\nData berhasil di hapus");
+            }
+
+        }
+    }
 }
