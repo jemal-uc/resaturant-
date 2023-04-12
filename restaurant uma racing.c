@@ -23,7 +23,7 @@ int main() {
     char str [] = "x+";
         gotoxy(52, 10);
         system("color e1");
-        system("color e1");
+        int op;
         Sleep(100);printf(" U");Sleep(100);printf("M");Sleep(100);printf("A ");Sleep(100);printf("RESTAURANT");Sleep(100);
         {
     int i;
@@ -96,4 +96,78 @@ int main() {
         printf("Anda sudah mencoba login sebanyak %d kali. Akun anda diblokir.\n", max_login_attempt);
         return 0;
     }
+    system ("cls");
+    gotoxy(52, 11);
+    printf("masuk program  ketik 1 \n \t\t\t\t\t\t\tkeluar ketik 2");
+    gotoxy(52, 13);
+    printf ("input : ");
+    scanf(" %i", &op);
+
+    switch (op)
+    {
+    case 1:
+        menu();
+        break;
+    case 2:
+        exit(1);
+        break;
+        gotoxy(52, 14);
+    default :
+        printf("inputan tidak ada \n\n");
+        break;
+    }
+    getch();
+    system ("cls");
 }
+
+
+
+int menu()
+{
+    int beli;
+
+    system("cls");
+    system ("color e1");
+    int ni, banyak_data;
+    for (int i=0; ni !=4; i++)
+    {
+        gotoxy(52, 9);
+        printf ("menu utama\n");
+        gotoxy(51, 10);
+        printf("==================\n");
+        gotoxy(51, 11);
+        printf ("1. data makanan \n");
+        gotoxy(51, 12);
+        printf ("2. riwayat transaksi \n");
+        gotoxy(51, 13);
+        printf ("3. keluar \n");
+        gotoxy(51, 14);
+        printf("==================\n");
+        gotoxy(52, 15);
+        printf ("input : ");
+        scanf(" %i", &ni);
+        switch (ni)
+        {
+        case 3:
+            exit(1);
+            break;
+            gotoxy(51, 10);
+        default :
+            printf("inputan tidak ada \n\n");
+            break;
+        }
+        getch();
+        system ("cls");
+    }
+    return 0;
+}
+
+struct barang
+{
+    char nama_br[30], stok_br[30];
+    int pil, kode;
+    float harga;
+    struct barang *next;
+
+}*head, *tail, *current;
+
