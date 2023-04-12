@@ -148,6 +148,9 @@ int menu()
         scanf(" %i", &ni);
         switch (ni)
         {
+        case 1:
+            dataBarang();
+
         case 3:
             exit(1);
             break;
@@ -170,4 +173,50 @@ struct barang
     struct barang *next;
 
 }*head, *tail, *current;
+
+int dataBarang()
+{
+    system("cls");
+    system ("color e1");
+    int pilih, banyak_data;
+    for (int i=0; pilih !=5; i++)
+    {
+        gotoxy(52, 9);
+        printf ("list \n");
+        gotoxy(51, 10);
+        printf ("------------------\n");
+        gotoxy(51, 11);
+
+        printf ("1. Tambahkan menu \n");
+        gotoxy(51, 12);
+
+        printf ("2. menu \n");
+        gotoxy(51, 13);
+
+        printf ("3. Edit data menu \n");
+        gotoxy(51, 14);
+
+        printf ("4. Hapus data menu \n");
+        gotoxy(51, 15);
+        printf ("5. keluar \n");
+        gotoxy(52, 16);
+        printf ("------------------\n");
+        gotoxy(52, 17);
+        printf ("input : ");
+        scanf(" %i", &pilih);
+        switch (pilih)
+        {
+        case 5:
+            menu();
+            break;
+            gotoxy(51, 12);
+        default :
+            printf("inputan tidak ada \n\n");
+            break;
+        }
+        getch();
+        system ("cls");
+    }
+    return 0;
+}
 
