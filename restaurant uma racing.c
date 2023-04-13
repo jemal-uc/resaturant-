@@ -374,18 +374,19 @@ void hapusData(){
             free(temp);
             printf("\nData berhasil di hapus");
         }else{
-
-            for(int i=0; temp!=NULL && i<posisi-1; i++){
+            temp = head;
+            for(int i=1; temp!=NULL && i<posisi; i++){
                 temp = temp->next;
             }
             if (temp == NULL || temp->next == NULL){
                 printf("\nData tidak  ada");
             }else{
-                struct barang *next = temp->next;
-                free(temp->next);
+                struct barang *hapus = temp->next;
+                temp->next = temp->next->next;
+                free(hapus);
                 printf("\nData berhasil di hapus");
             }
-
         }
     }
 }
+
