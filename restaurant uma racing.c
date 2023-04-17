@@ -4,74 +4,42 @@
     #include <windows.h>
     #include <conio.h>
 
+
 struct barang {
     int kode;
     char nama[30], stok[20], harga[30], telp[20];
 }dat[15];
 
 struct node {
-    char hist[100];
-    struct barang *barang;
-    struct node *next;
-};
+char hist[100]; struct barang *barang; struct node *next;};
 
-
-int jum=0, tot=0, temp, oy, result, x;
-char temps[100];
-struct node*head = NULL;
+int jum=0, tot=0, temp, oy, result, x; char temps[100]; struct node*head = NULL;
 
 void gotoxy();
-void Mencari();
+void cari();
 
  void gotoxy (int x, int y){
-        COORD CRD;
-        CRD.X=x;
-        CRD.Y=y;
-        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),CRD);
-    }
+    COORD CRD;
+    CRD.X=x;
+    CRD.Y=y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),CRD);}
 
-
-void append(struct node** head_ref, char histo[]) { // alokasi memori, untuk menyimpan riwayat node yang di tambahkan
-
-    struct node* new_node = (struct node*) malloc(sizeof(struct node));
-    struct node *last = * head_ref;
-
-    strcpy(new_node->hist, histo); // alokasi ke pointer
-    new_node->next = NULL; // node baru / kosong
-
-    if(*head_ref == NULL) {
-        last = last->next; // ke node baru
-    }
-
-    last->next = new_node; // mencari node terahir
-}
-
-
-void printlist(struct node *node){ // untuk mencetak node merupakan pointer
-    while(node != NULL){
-        printf("%s \n", node->hist);
-        node = node->next;
-    }
-}
-
-void Mencari(){
-    system ("cls"); // mengurutkan "dat" array
+void cari(){
+    system ("cls");
     int i, j;
     struct barang temp;
 
-    for(i=0; i<tot-1; i++){ // mengurutkan sesuai kode -1 tanpa mengembalikan nilai
-        for(j=0; j<tot-i-1; j++){
-            if(dat[j].kode > dat[j+1].kode){
-                temp = dat[j];
-                dat[j] = dat[j+1];
-                dat[j+1] = temp;
-            }
+    for(i=0; i<tot-1; i++){
+    for(j=0; j<tot-i-1; j++){
+    if(dat[j].kode > dat[j+1].kode){
+        temp = dat[j];
+        dat[j] = dat[j+1];
+        dat[j+1] = temp;}
         }
     }
 }
 
-
-void tambah() {
+void tambahData() {
     system ("cls");
     gotoxy(51, 11);
     printf("Tambah Data Makanan");
@@ -108,15 +76,15 @@ void tambah() {
         gotoxy(43, 20);
         scanf(" %[^\n]%*c", &dat[i + tot].harga);
 
-        struct node* new_node = (struct node*) malloc(sizeof(struct node)); // alokasikan memori
-        new_node->barang = &dat[i + tot]; // ke "barang" dari node baru
+        struct node* new_node = (struct node*) malloc(sizeof(struct node));
+        new_node->barang = &dat[i + tot];
 
-        if(head == NULL) { // jika kosong maka ke node baru
+        if(head == NULL) {
             head = new_node;
             new_node->next = NULL;
         }
         else {
-            struct node* temp_node = head; // jika salah menaruh / doble menaruh ke node selanjudnya
+            struct node* temp_node = head;
             while(temp_node->next != NULL) {
                 temp_node = temp_node->next;
             }
@@ -127,13 +95,13 @@ void tambah() {
 
     tot += jum;
 
-    FILE *file = fopen("data_barang.txt", "a");
+    FILE *file = fopen("data_makanan.txt", "a");
     if (file == NULL) {
         printf("Gagal membuka file ");
         return;
     }
-    struct node* temp_node = head; // menulis data yang di simpan linked list
-    while(temp_node != NULL) { // penulisan node
+    struct node* temp_node = head;
+    while(temp_node != NULL) {
         fprintf(file, "%s %s %d %s\n", temp_node->barang->stok, temp_node->barang->nama, temp_node->barang->kode, temp_node->barang->harga);
         temp_node = temp_node->next;
     }
@@ -145,18 +113,18 @@ void tambah() {
     dataBarang();
 }
 
- void lihat() {
-    FILE *file = fopen("data_barang.txt", "r");
+ void tampilkan() {
+    FILE *file = fopen("data_makanan.txt", "r");
     if (file == NULL) {
-        printf(" Gagal membuka file\n ");
-        return;
+    printf(" Gagal membuka file\n ");
+    return;
     }
 
-    struct node *head = NULL; // node kosong
+    struct node *head = NULL;
 
-    struct barang *d = malloc(sizeof(struct barang)); // "malloc"aloskasi memori untuk setiap node baru pada linked list
+    struct barang *d = malloc(sizeof(struct barang));
     while (fscanf(file, "%s %s %d %s", d->stok, d->nama, &d->kode, d->harga) != EOF) {
-    // membaca dan menyimpan data berikutnya pada sebuah node baru
+
 
         struct node *new_node = (struct node*) malloc(sizeof(struct node));
         new_node->barang = d;
@@ -180,15 +148,15 @@ void tambah() {
     fclose(file);
 
     int i = 1;
-    struct node *temp_node = head; // akses data linked list
-    while(temp_node != NULL) { // mengecek apakah ada node
+    struct node *temp_node = head;
+    while(temp_node != NULL) {
         system("cls");
         gotoxy(26, 13);
         printf("  Daftar Makanan   ");
         gotoxy(26, 15);
         printf(" Data ke %d", i);
         gotoxy(26, 16);
-        printf(" Stok                    :%s", temp_node->barang->stok); // akses setiap node & variable
+        printf(" Stok                    :%s", temp_node->barang->stok);
         gotoxy(26, 17);
         printf(" Nama Barang             :%s", temp_node->barang->nama);
         gotoxy(26, 18);
@@ -197,33 +165,29 @@ void tambah() {
         printf(" Harga Barang            :%s", temp_node->barang->harga);
         getch();
         i++;
-        temp_node = temp_node->next; // memindahkan pointer ke linked list
+        temp_node = temp_node->next;
     }
 
-    // melepaskan memori yang dialokasikan untuk setiap node
+
     struct node *curr_node = head;
     while(curr_node != NULL) {
         struct node *temp_node = curr_node;
         curr_node = curr_node->next;
-        free(temp_node); // hapus node
-    }
-    free(d); // alokasi ke pointer
-}
+        free(temp_node);}
+    free(d);}
 
 
-void urut() {
-    system ("cls");
+void urutData() {
     int temp;
     char temps[30];
 
-    // read data from file
-    FILE *file = fopen("data_barang.txt", "r");
+    FILE *file = fopen("data_makanan.txt", "r");
     if (file == NULL) {
-        printf("  Gagal membuka file\n ");
-        return;
+    printf("  Gagal membuka file\n ");
+    return;
     }
     while(fscanf(file, "%s %s %d %s", dat[tot].stok, dat[tot].nama, &dat[tot].kode, dat[tot].harga) != EOF) {
-        // create a new node
+
         struct node* new_node = (struct node*) malloc(sizeof(struct node));
         new_node->barang = &dat[tot];
 
@@ -269,7 +233,7 @@ void urut() {
         }
     }
 
-    file = fopen("data_barang.txt", "w");
+    file = fopen("data_makanan.txt", "w");
     if (file == NULL) {
         printf(" Gagal membuka file\n ");
         return;
@@ -286,7 +250,7 @@ void urut() {
     system("cls");
 }
 
-void mencari(){
+void mencariData(){
     system ("cls");
     int oy;
     gotoxy(26,13);
@@ -295,7 +259,7 @@ void mencari(){
     printf("Masukkan Kode Barang: ");
     scanf("%d", &oy);
 
-    char filename[] = "data_barang.txt";
+    char filename[] = "data_makanan.txt";
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf(" Gagal membuka file\n ");
@@ -325,7 +289,7 @@ void mencari(){
     struct node* temp = head;
     while (temp != NULL) {
         if (temp->barang->kode == oy) {
-            // display search result
+
             gotoxy (26,17);
             printf("    Data Tersedia    ");
             gotoxy (26,19);
@@ -350,7 +314,7 @@ void mencari(){
 }
 
 
-void hapus() {
+void hapusData() {
     system ("cls");
     int kodeBarang;
     struct node *temp_node = head, *prev_node;
@@ -385,14 +349,14 @@ void hapus() {
         scanf(" %c", &jawab);
 
         if (jawab == 'Y' || jawab == 'y') {
-            if (temp_node == head) { // if node to be deleted is the first node
+            if (temp_node == head) {
                 head = head->next;
             } else {
                 prev_node->next = temp_node->next;
             }
             free(temp_node);
 
-            FILE *file = fopen("data_barang.txt", "w");
+            FILE *file = fopen("data_makanan.txt", "w");
             if (file == NULL) {
                 printf(" 31mGagal membuka file\n ");
                 return;
@@ -427,7 +391,7 @@ void edit() {
     printf("Masukkan Kode  : ");
     scanf("%d", &oy);
 
-    Mencari();
+    cari();
 
     result = 0;
     for (x = 0; x <= tot; x++) {
@@ -500,7 +464,7 @@ void edit() {
             break;
     }
 
-    FILE *fp = fopen("data_barang.txt", "w");
+    FILE *fp = fopen("data_makanan.txt", "w");
     if (fp == NULL) {
         printf(" Gagal membuka file\n ");
         return;
@@ -522,9 +486,7 @@ void edit() {
 system("cls");
 }
 
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//LOGIN
 char user[10], pass[10];
 int login_attempt = 1, max_login_attempt = 3;
 
@@ -540,27 +502,27 @@ int main() {
     printf ("    Loading ");
     gotoxy(1, 12);
 
-    for(i=1; i <= 25; i++) // Perulangan kotak loading 25
+    for(i=1; i <= 25; i++)
     {
-        printf("%c", 254); // Kode tampilan kotak
+        printf("%c", 254);
         Sleep (20);
     }
-    for(i=1; i <= 15; i++) // Perulangan kotak loading 15
+    for(i=1; i <= 15; i++)
     {
         printf("%c", 254);
         Sleep (300);
     }
-    for(i=1; i <= 25; i++) // Perulangan kotak loading 25
+    for(i=1; i <= 25; i++)
     {
         printf("%c", 254);
         Sleep (50);
     }
-    for(i=1; i <= 15; i++) // Perulangan kotak loading 15
+    for(i=1; i <= 15; i++)
     {
         printf("%c", 254);
         Sleep (300);
     }
-    for(i=1; i <= 37; i++) // Perulangan kotak loading 37
+    for(i=1; i <= 37; i++)
     {
         printf("%c", 254);
         Sleep (10);
@@ -629,7 +591,7 @@ int dataBarang()
         printf ("2. menu makanan \n");
         gotoxy(51, 13);
 
-        printf ("3. Urutkan data menu \n");
+        printf ("3. Hapus data menu\n");
         gotoxy(51, 14);
 
         printf ("4. Edit data menu \n");
@@ -638,7 +600,7 @@ int dataBarang()
         printf ("5. Mencari data menu \n");
         gotoxy(51, 16);
 
-        printf ("6. Hapus data menu \n");
+        printf ("6. Urutkan data menu \n");
         gotoxy(51, 17);
 
         printf ("7. keluar \n");
@@ -650,24 +612,29 @@ int dataBarang()
         switch (pilih)
         {
         case 1:
-            tambah();
+            tambahData();
             break;
         case 2:
-            lihat();
+            tampilkan();
             break;
         case 3:
-            urut();
+             hapusData();
             break;
         case 4:
             edit();
             break;
         case 5:
-            mencari();
+            mencariData();
             break;
         case 6:
-            hapus();
+            urutData();
+
             break;
         case 7:
+            system("cls");
+            gotoxy(51, 14);
+            printf("KELUAR");
+            system('cls');
             break;
         default :
 
