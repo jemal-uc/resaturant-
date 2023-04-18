@@ -1,64 +1,74 @@
-void mencariData(){
-    system ("cls");
-    int oy;
-    gotoxy(26,13);
-    printf("   Pencarian Data Barang   ");
-    gotoxy (26,15);
-    printf("Masukkan Kode Barang: ");
-    scanf("%d", &oy);
+void urutData() {
+    int temp;
+    char temps[30];
 
-    char filename[] = "data_makanan.txt";
-    FILE *file = fopen(filename, "r");
+    FILE *file = fopen("data_makanan.txt", "r");
+    if (file == NULL) {
+    printf("  Gagal membuka file\n ");
+    return;
+    }
+    while(fscanf(file, "%s %s %d %s", dat[tot].stok, dat[tot].nama, &dat[tot].kode, dat[tot].harga) != EOF) {
+
+        struct node* new_node = (struct node*) malloc(sizeof(struct node));
+        new_node->barang = &dat[tot];
+
+        if(head == NULL) {
+            head = new_node;
+            new_node->next = NULL;
+        }
+        else {
+            struct node* temp_node = head;
+            while(temp_node->next != NULL) {
+                temp_node = temp_node->next;
+            }
+            temp_node->next = new_node;
+            new_node->next = NULL;
+        }
+        tot++;
+    }
+    fclose(file);
+
+    for (int i = 0; i < tot -1; i++) {
+        for (int j = 0; j < tot -i -1; j++) {
+            if (dat[j].kode > dat[j+1].kode) {
+                temp = dat[j].kode;
+                dat[j].kode = dat[j+1].kode;
+                dat[j+1].kode = temp;
+
+                strcpy(temps, dat[j].nama);
+                strcpy(dat[j].nama, dat[j+1].nama);
+                strcpy(dat[j+1].nama, temps);
+
+                strcpy(temps, dat[j].stok);
+                strcpy(dat[j].stok, dat[j+1].stok);
+                strcpy(dat[j+1].stok, temps);
+
+                strcpy(temps, dat[j].harga);
+                strcpy(dat[j].harga, dat[j+1].harga);
+                strcpy(dat[j+1].harga, temps);
+
+                strcpy(temps, dat[j].telp);
+                strcpy(dat[j].telp, dat[j+1].telp);
+                strcpy(dat[j+1].telp, temps);
+            }
+        }
+    }
+
+    file = fopen("data_makanan.txt", "w");
     if (file == NULL) {
         printf(" Gagal membuka file\n ");
         return;
     }
-    struct node* head = NULL;
-    char line[100];
-    while (fgets(line, sizeof(line), file)) {
-        struct barang* new_data = malloc(sizeof(struct barang));
-        sscanf(line, "%s %s %d %s", new_data->stok, new_data->nama, &new_data->kode, new_data->harga);
-        struct node* new_node = malloc(sizeof(struct node));
-        new_node->barang = new_data;
-        if (head == NULL) {
-            head = new_node;
-            head->next = NULL;
-        } else {
-            struct node* temp = head;
-            while (temp->next != NULL) {
-                temp = temp->next;
-            }
-            temp->next = new_node;
-            new_node->next = NULL;
-        }
+    struct node* temp_node = head;
+    while(temp_node != NULL) {
+        fprintf(file, "%s %s %d %s\n", temp_node->barang->stok, temp_node->barang->nama, temp_node->barang->kode, temp_node->barang->harga);
+        temp_node = temp_node->next;
     }
     fclose(file);
 
-    struct node* temp = head;
-    while (temp != NULL) {
-        if (temp->barang->kode == oy) {
-
-            gotoxy (26,17);
-            printf("    Data Tersedia    ");
-            gotoxy (26,19);
-            printf(" Stok           : %s", temp->barang->stok);
-            gotoxy (26,20);
-            printf(" Nama Barang    : %s", temp->barang->nama);
-            gotoxy (26,21);
-            printf(" Kode           : %d", temp->barang->kode);
-            gotoxy (26,22);
-            printf(" Harga          : %s", temp->barang->harga);
-            getch();
-            dataBarang();
-            return;
-        }
-        temp = temp->next;
-    }
-
-    gotoxy (26,24);
-    printf("   Data tidak ditemukan   ");
-    getch();
-    dataBarang();
+    printf(" \t\t\tData berhasil diurutkan berdasarkan Kode Barang\n ");
+    system("pause");
+    system("cls");
 }
 
 
